@@ -12,7 +12,7 @@ import seedu.addressbook.ui.TextUi;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
+import java.io.FileNotFoundException;
 
 /**
  * Entry point of the Address Book application.
@@ -107,12 +107,22 @@ public class Main {
         try {
             command.setData(addressBook, lastShownList);
             CommandResult result = command.execute();
+            checkStorageFileExist();
             storage.save(addressBook);
             return result;
         } catch (Exception e) {
             ui.showToUser(e.getMessage());
             throw new RuntimeException(e);
         }
+    }
+    
+    /**
+     * Check the StorageFile is exist.
+     * @throws InvalidStorageFilePathException if the storage file is not exist.
+     */
+    private void checkStorageFileExist() throws FileNotFoundException {
+    	if(!storage.isExist()){
+    		throw new FileNotFoundException("Cannot find storage file at " + storage.getPath());    	}
     }
 
     /**
